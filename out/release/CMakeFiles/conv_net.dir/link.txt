@@ -1,2 +1,0 @@
-/usr/bin/ar qc libconv_net.a CMakeFiles/conv_net.dir/image.cpp.o CMakeFiles/conv_net.dir/feature_map.cpp.o CMakeFiles/conv_net.dir/conv_kernel.cpp.o CMakeFiles/conv_net.dir/conv_layer.cpp.o CMakeFiles/conv_net.dir/pool_layer.cpp.o CMakeFiles/conv_net.dir/neuron_layer.cpp.o
-/usr/bin/ranlib libconv_net.a
