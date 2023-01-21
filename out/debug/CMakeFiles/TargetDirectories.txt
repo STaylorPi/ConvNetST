@@ -1,0 +1,10 @@
+/home/sebastian/Documents/dev/CNN/out/debug/CMakeFiles/CNN.dir
+/home/sebastian/Documents/dev/CNN/out/debug/CMakeFiles/conv_net.dir
+/home/sebastian/Documents/dev/CNN/out/debug/CMakeFiles/edit_cache.dir
+/home/sebastian/Documents/dev/CNN/out/debug/CMakeFiles/rebuild_cache.dir
+/home/sebastian/Documents/dev/CNN/out/debug/vendor/stb_image/CMakeFiles/stb_image.dir
+/home/sebastian/Documents/dev/CNN/out/debug/vendor/stb_image/CMakeFiles/edit_cache.dir
+/home/sebastian/Documents/dev/CNN/out/debug/vendor/stb_image/CMakeFiles/rebuild_cache.dir
+/home/sebastian/Documents/dev/CNN/out/debug/random/CMakeFiles/random.dir
+/home/sebastian/Documents/dev/CNN/out/debug/random/CMakeFiles/edit_cache.dir
+/home/sebastian/Documents/dev/CNN/out/debug/random/CMakeFiles/rebuild_cache.dir

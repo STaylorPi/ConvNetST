@@ -1,0 +1,1 @@
+/usr/bin/c++ -g -DDEBUG CMakeFiles/CNN.dir/main.cpp.o -o CNN   -L/home/sebastian/Documents/dev/CNN/vendor/stb_image  -L/home/sebastian/Documents/dev/CNN/random  -Wl,-rpath,/home/sebastian/Documents/dev/CNN/vendor/stb_image:/home/sebastian/Documents/dev/CNN/random libconv_net.a vendor/stb_image/libstb_image.a random/librandom.a 
