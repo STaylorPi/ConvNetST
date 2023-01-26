@@ -6,10 +6,15 @@ class PoolLayer
 {
 public:
 	PoolLayer(const ConvLayer& in_layer, std::size_t pool_dim); // init out_map from in_layer
-	
+
 	void compute(const FeatureMap& input_map);
 
 	const auto& get_output() const { return output_map; }
+
+	// output dimensions
+	auto width() const { return output_map.get_width(); }
+	auto height() const { return output_map.get_height(); }
+	auto layers() const { return output_map.get_layers(); }
 
 private:
 	// gets the pooled value at tl (x * pool_size, y * pool_size), also setting the bit mask

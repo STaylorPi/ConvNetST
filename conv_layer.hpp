@@ -18,6 +18,11 @@ public:
 	void random_init_kernels(float max_bound);
 
 	const auto& get_output() const { return output; }
+	 
+	// output dimensions
+	auto width() const { return output.get_width(); }
+	auto height() const { return output.get_height(); }
+	auto layers() const { return output.get_layers(); }
 
 private:
 	FeatureMap output;
