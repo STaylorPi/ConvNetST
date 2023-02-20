@@ -22,6 +22,11 @@ public:
 	float dot_at(const ImageGrey& image, int pixel_x, int pixel_y, Padding padding) const;
 	float dot_at(const FeatureMap& f_map, int tl_x, int tl_y) const;
 
+	ConvKernel operator+(const ConvKernel& rhs); // component adds same-size kernels
+	ConvKernel& operator+=(const ConvKernel& rhs);
+
+	ConvKernel operator*(float coeff);
+
 private:
 	std::vector<float> data; // inner rows, outer columns
 	std::size_t n=0; // nxn grid

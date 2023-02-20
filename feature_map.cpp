@@ -11,6 +11,11 @@ FeatureMap::FeatureMap(const ImageGrey& image)
 {
 }
 
+FeatureMap::FeatureMap(const std::vector<float>& fill_from)
+	:data(fill_from), width(1), height(1), layers(fill_from.size())
+{
+}
+
 void FeatureMap::set_at(std::size_t w_pos, std::size_t h_pos, std::size_t layer, float value)
 {
 	if (w_pos >= width) return;
@@ -18,6 +23,14 @@ void FeatureMap::set_at(std::size_t w_pos, std::size_t h_pos, std::size_t layer,
 	if (layer >= layers) return;
 
 	data[layer * width * height + h_pos * width + w_pos] = value;
+}
+
+void FeatureMap::set_at(std::size_t w_pos, std::size_t h_pos, float value)
+{
+	for (std::size_t l=0; l < layers; ++l)
+	{
+		set_at(w_pos, h_pos, l, value);
+	}
 }
 
 float FeatureMap::get_at(std::size_t w_pos, std::size_t h_pos, std::size_t layer) const

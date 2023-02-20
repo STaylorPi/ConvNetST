@@ -65,6 +65,33 @@ float ConvKernel::dot_at(const FeatureMap& f_map, int tl_x, int tl_y) const
 	return product;
 }
 
+ConvKernel ConvKernel::operator+(const ConvKernel& rhs)
+{
+	if (rhs.dim() != dim()) return ConvKernel(dim());
+	ConvKernel sum(dim());
+	std::transform(data.begin(), data.end(), rhs.data.begin(), sum.data.begin(), std::plus<float>());
+
+	return sum;
+}
+
+ConvKernel& ConvKernel::operator+=(const ConvKernel& rhs)
+{
+	if (rhs.dim() != dim()) return *this;
+
+	std::transform(data.begin(), data.end(), rhs.data.begin(), data.begin(), std::plus<float>());
+
+	return *this;
+}
+
+ConvKernel ConvKernel::operator*(float coeff)
+{
+	ConvKernel out(data, n);
+	std::transform(out.data.begin(), out.data.end(), out.data.begin(), [&coeff](auto& val){
+			return val * coeff;
+			});
+	return out;
+}
+
 ImageGrey convolve(const ImageGrey& image, const ConvKernel& kernel, std::size_t pad_size, Padding pad_type)
 {
 	std::size_t new_width = image.get_width() - kernel.dim() + 2 * pad_size + 1;
@@ -107,7 +134,7 @@ std::size_t get_new_dim(std::size_t old_dim, std::size_t kernel_dim, std::size_t
 // leaves data unchanged if the dimensionality is not correct
 void convolve_to(const FeatureMap& in_map, FeatureMap& out_map, const ConvKernel& kernel, std::size_t padding, std::size_t stride, std::size_t layer)
 {
-	std::size_t new_width = get_new_dim(in_map.get_width(), kernel.dim(), padding, stride); 
+	std::size_t new_width = get_new_dim(in_map.get_width(), kernel.dim(), padding, stride);
 	std::size_t new_height = get_new_dim(in_map.get_height(), kernel.dim(), padding, stride);
 	if ((out_map.get_width() != new_width) || (out_map.get_height() != new_height)) return;
 

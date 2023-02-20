@@ -1,31 +1,42 @@
 #include <iostream>
 
-#include "conv_net_st.hpp"
+#include "conv_net.hpp"
+#include "random/random.hpp"
 
 int main()
 {
-	std::vector<NeuronLayer> layers(4, {1, 1});
-	for (auto &l : layers) { l.random_init_params(1.0f, 1.0f); }
-	
-	std::size_t count = 0;
+	NetworkLayout nl;
+	nl.in_x = 8;
+	nl.in_y = 8;
+	nl.conv_layers = 3;
+	nl.kernel_dims = {3, 3, 3};
+	nl.kernels = {1, 1, 1};
+	nl.neurons = {1, 1};
+	nl.neuron_layers = 2;
+	nl.paddings = {0, 1, 0};
+	nl.strides = {1, 1, 1};
+	nl.pool_params = {1, 2, 1};
+
+	ConvNet cnn(nl, 1.0f, 1.0f, 1.0f);
+
+	FeatureMap input(8, 8, 1);
+	std::size_t batch = 100;
+
 	while (true)
 	{
-		float input = Rand::random(); auto output = 1 - input;
-		layers[0].compute({input});
-		for (int i=1; i < layers.size(); ++i) { layers[i].compute(layers[i-1].get_output()); }
+		float res = 0.0f;
+		for (int i=0; i < batch; ++i) {
+			auto value = Rand::random();
+			input.fill_with(value);
 
-		std::cout << output - layers[layers.size() - 1].get_output()[0] << '\n';
+			cnn.compute(input);
+			cnn.update_backprop({value - cnn.get_output()[0]});
+			res += value - cnn.get_output()[0];
+		}
 
-		layers[layers.size()-1].update_backprop(layers[layers.size()-2].get_output(),
-				{output - layers[layers.size()-1].get_output()[0]});
+		std::cout << res / float(batch) << '\n';
 
-		for (int i=layers.size() - 2; i > 0; --i) { layers[i].update_backprop(layers[i-1].get_output(), layers[i+1].get_backprop_deltas()); }
-		layers[0].update_backprop({input}, layers[1].get_backprop_deltas());
-	
-		if (count % 100 == 0)
-			for (auto& layer : layers) { layer.update_params(0.0005); }
-
-		count++;
+		cnn.write_changes(0.0000001);
 	}
 
 	return 0;

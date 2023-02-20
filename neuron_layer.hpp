@@ -15,7 +15,7 @@ public:
 
 	void update_backprop(const std::vector<float>& inputs, const std::vector<float>& output_deltas);
 	void update_params(float grad_mul); // writes the deltas calculated from the above
-	
+
 	const auto& get_backprop_deltas() const { return input_deltas; }
 
 	const auto& get_output() const { return output_layer; }
