@@ -12,6 +12,7 @@ public:
 	ConvKernel(std::size_t dimension);
 	ConvKernel(const std::vector<float>& fill_from, std::size_t dimension);
 
+	void fill(float value) { std::fill(data.begin(), data.end(), value); }
 	void normalise(); // ensure that the weights sum to one
 
 	const auto& view() const { return data; }

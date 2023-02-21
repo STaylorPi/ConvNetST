@@ -41,7 +41,7 @@ void ConvLayer::random_init_kernels(float max_bound)
 	{
 		for (float& data : kernel.view())
 		{
-			data = Rand::random_bound(max_bound);
+			data = Rand::random() * max_bound;
 		}
 	}
 }
@@ -67,7 +67,7 @@ void ConvLayer::update_backprop(const FeatureMap &input_map, const FeatureMap &o
 		{
 			for (std::size_t out_x=0; out_x < output.get_width(); ++out_x)
 			{
-				for (std::size_t kernel_pos; kernel_pos < pow(kernel_size, 2); ++kernel_pos)
+				for (std::size_t kernel_pos=0; kernel_pos < pow(kernel_size, 2); ++kernel_pos)
 				{
 					kernel_deltas[l].view()[kernel_pos] +=
 						get_weight_delta_at(input_map, l, kernel_pos % kernel_size, kernel_pos / kernel_size,
@@ -118,5 +118,10 @@ void ConvLayer::update_params(float grad_mul)
 	for (std::size_t kernel=0; kernel < kernels.size(); ++kernel)
 	{
 		kernels[kernel] += kernel_deltas[kernel] * grad_mul;
+	}
+
+	for (auto& k : kernel_deltas)
+	{
+		k.fill(0.0f);
 	}
 }

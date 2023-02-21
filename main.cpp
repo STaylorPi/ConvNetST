@@ -6,21 +6,21 @@
 int main()
 {
 	NetworkLayout nl;
-	nl.in_x = 8;
-	nl.in_y = 8;
-	nl.conv_layers = 3;
-	nl.kernel_dims = {3, 3, 3};
-	nl.kernels = {1, 1, 1};
-	nl.neurons = {1, 1};
-	nl.neuron_layers = 2;
-	nl.paddings = {0, 1, 0};
-	nl.strides = {1, 1, 1};
-	nl.pool_params = {1, 2, 1};
+	nl.in_x = 3;
+	nl.in_y = 3;
+	nl.conv_layers = 1;
+	nl.kernel_dims = {3};
+	nl.kernels = {1};
+	nl.neurons = {1};
+	nl.neuron_layers = 1;
+	nl.paddings = {0};
+	nl.strides = {1};
+	nl.pool_params = {1};
 
 	ConvNet cnn(nl, 1.0f, 1.0f, 1.0f);
 
-	FeatureMap input(8, 8, 1);
-	std::size_t batch = 100;
+	FeatureMap input(3, 3, 1);
+	std::size_t batch = 16;
 
 	while (true)
 	{
@@ -31,12 +31,12 @@ int main()
 
 			cnn.compute(input);
 			cnn.update_backprop({value - cnn.get_output()[0]});
-			res += value - cnn.get_output()[0];
+			res += fabs(value - cnn.get_output()[0]);
 		}
 
 		std::cout << res / float(batch) << '\n';
 
-		cnn.write_changes(0.0000001);
+		cnn.write_changes(0.001 * fabs(res / float(batch)));
 	}
 
 	return 0;

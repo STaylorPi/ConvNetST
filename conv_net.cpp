@@ -59,38 +59,71 @@ void ConvNet::compute(const FeatureMap &input_map)
 
 void ConvNet::update_backprop(const std::vector<float> &deltas)
 {
-	neuron_layers[neuron_layers.size() - 1].update_backprop(
-		neuron_layers[neuron_layers.size() - 2].get_output(), deltas);
-
-	for (std::size_t n = neuron_layers.size() - 2; n >= 1; --n)
-	{
-		neuron_layers[n].update_backprop(
-				neuron_layers[n-1].get_output(), neuron_layers[n+1].get_backprop_deltas());
+	// Update the neuron layers
+	// update the last layer from the previous neuron layer and output deltas
+	if (neuron_layers.size() >= 2) {
+		neuron_layers[neuron_layers.size() - 1].update_backprop(
+			neuron_layers[neuron_layers.size() - 2].get_output(), deltas);
 	}
 
-	neuron_layers[0].update_backprop(conv_layers[conv_layers.size()-1].get_output().get_data(),
-			neuron_layers[1].get_backprop_deltas());
-
-	pool_layers[pool_layers.size() - 1].update_backprop(
-			conv_layers[conv_layers.size() - 1].get_output(), neuron_layers[0].get_backprop_deltas());
-	conv_layers[conv_layers.size() - 1].update_backprop(
-			conv_layers[conv_layers.size() - 2].get_output(),
-			pool_layers[pool_layers.size() - 1].get_backprop_deltas());
-
-	for (std::size_t i = conv_layers.size() - 2; i >= 1; --i)
-	{
-		pool_layers[i].update_backprop(
-				conv_layers[i].get_output(),
-				conv_layers[i+1].get_backprop_deltas());
-
-		conv_layers[i].update_backprop(pool_layers[i-1].get_output(),
-				pool_layers[i].get_backprop_deltas());
+	// update the middle layers from the sandwiching layers
+	if (neuron_layers.size() >= 3) {
+		for (std::size_t n = neuron_layers.size() - 2; n >= 1; --n)
+		{
+			neuron_layers[n].update_backprop(
+					neuron_layers[n-1].get_output(), neuron_layers[n+1].get_backprop_deltas());
+		}
 	}
 
-	pool_layers[0].update_backprop(conv_layers[0].get_output(),
-			conv_layers[1].get_backprop_deltas());
+	// update the first
+	if (neuron_layers.size() >= 2) {
+		neuron_layers[0].update_backprop(conv_layers[conv_layers.size()-1].get_output().get_data(),
+				neuron_layers[1].get_backprop_deltas());
+	}
 
-	conv_layers[0].update_backprop(previous_input, pool_layers[0].get_backprop_deltas());
+	if (neuron_layers.size() == 1) {
+		neuron_layers[0].update_backprop(conv_layers[conv_layers.size()-1].get_output().get_data(), deltas);
+	}
+
+	// Update the convolution layers (through the pool layers)
+
+	// update the last conv_layer/pool_layer pair from the first neuron_layer
+	// and the previous pool_layer
+	if (conv_layers.size() >= 2) {
+		pool_layers[pool_layers.size() - 1].update_backprop(
+				conv_layers[conv_layers.size() - 1].get_output(), neuron_layers[0].get_backprop_deltas());
+		conv_layers[conv_layers.size() - 1].update_backprop(
+				conv_layers[conv_layers.size() - 2].get_output(),
+				pool_layers[pool_layers.size() - 1].get_backprop_deltas());
+	}
+
+	// update the middle layers from the sandwiching layers
+	if (conv_layers.size() >= 3) {
+		for (std::size_t i = conv_layers.size() - 2; i >= 1; --i)
+		{
+			pool_layers[i].update_backprop(
+					conv_layers[i].get_output(),
+					conv_layers[i+1].get_backprop_deltas());
+
+			conv_layers[i].update_backprop(pool_layers[i-1].get_output(),
+					pool_layers[i].get_backprop_deltas());
+		}
+	}
+
+	// update the first conv_layer/pool_layer pair
+	if (conv_layers.size() >= 2) {
+		pool_layers[0].update_backprop(conv_layers[0].get_output(),
+				conv_layers[1].get_backprop_deltas());
+
+		conv_layers[0].update_backprop(previous_input, pool_layers[0].get_backprop_deltas());
+	}
+
+	if (conv_layers.size() == 1)
+	{
+		pool_layers[0].update_backprop(conv_layers[0].get_output(),
+				neuron_layers[0].get_backprop_deltas());
+		conv_layers[0].update_backprop(previous_input, pool_layers[0].get_backprop_deltas());
+	}
 }
 
 void ConvNet::write_changes(float grad_mul)
