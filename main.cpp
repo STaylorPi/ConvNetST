@@ -36,7 +36,7 @@ int main()
 
 		std::cout << res / float(batch) << '\n';
 
-		cnn.write_changes(0.001 * fabs(res / float(batch)));
+		cnn.write_changes(0.0001);
 	}
 
 	return 0;
