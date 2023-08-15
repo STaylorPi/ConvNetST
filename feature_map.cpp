@@ -5,14 +5,15 @@ FeatureMap::FeatureMap(std::size_t width_, std::size_t height_, std::size_t laye
 {
 }
 
+FeatureMap::FeatureMap(std::size_t width_, std::size_t height_, std::size_t layers_, const std::vector<float>& fill_from)
+	:data(width_ * height_ * layers_), width{ width_ }, height{ height_ }, layers{ layers_ }
+{
+	if (fill_from.size() == data.size()) data = fill_from;
+}
+
 FeatureMap::FeatureMap(const ImageGrey& image)
 	:data(image.get_data()), width{ image.get_width() },
 	height{ image.get_height() }, layers{ 1 }
-{
-}
-
-FeatureMap::FeatureMap(const std::vector<float>& fill_from)
-	:data(fill_from), width(1), height(1), layers(fill_from.size())
 {
 }
 

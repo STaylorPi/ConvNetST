@@ -21,7 +21,6 @@ void NeuronLayer::random_init_params(float w_range, float b_range)
 
 void NeuronLayer::compute(const FeatureMap& f_map)
 {
-	if (f_map.get_width() * f_map.get_height() != 1) return;
 	compute(f_map.get_data());
 }
 

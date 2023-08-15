@@ -6,10 +6,8 @@ class FeatureMap
 {
 public:
 	FeatureMap(std::size_t width_, std::size_t height_, std::size_t layers_);
+	FeatureMap(std::size_t width_, std::size_t height_, std::size_t layers_, const std::vector<float>& fill_from);
 	FeatureMap(const ImageGrey& image);
-
-	// assumes width = height = 1
-	FeatureMap(const std::vector<float>& fill_from);
 
 	void set_at(std::size_t w_pos, std::size_t h_pos, std::size_t layer, float value);
 	void set_at(std::size_t w_pos, std::size_t h_pos, float value); // sets for all layers

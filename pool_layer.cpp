@@ -82,3 +82,9 @@ void PoolLayer::update_backprop(const FeatureMap& input_map, const FeatureMap& o
 		}
 	}
 }
+
+void PoolLayer::update_backprop(const FeatureMap &input_map, const std::vector<float> &output_deltas)
+{
+	update_backprop(input_map, FeatureMap(output_map.get_width(),
+				output_map.get_height(), output_map.get_layers(), output_deltas));
+}

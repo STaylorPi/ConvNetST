@@ -17,6 +17,7 @@ public:
 	auto layers() const { return output_map.get_layers(); }
 	
 	void update_backprop(const FeatureMap& input_map, const FeatureMap& output_deltas);
+	void update_backprop(const FeatureMap& input_map, const std::vector<float>& output_deltas);
 	const auto& get_backprop_deltas() const { return input_deltas; }
 
 private:
